@@ -200,7 +200,7 @@ public class DownloaderDAO {
 		Log.log("connect to " + url + "....");
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 //		Html html = httpClientDownloader.download(url);
-		Html html = httpClientDownloader.download(url, 7, "utf-8");
+		Html html = httpClientDownloader.download(url, "utf-8");
 		String content = html.toString();
 		Log.log("success connect to : " + url);
 		return content;

@@ -174,6 +174,7 @@ public class GenerateLdaData {
 	public static List<Double> getTS(String filePath){
 		List<Double> doubleList = new ArrayList<Double>();
 		try {
+			@SuppressWarnings("unchecked")
 			List<String> lines = FileUtils.readLines(new File(filePath));
 			for (int i = 0; i < lines.size(); i++) {
 				String line = lines.get(i);

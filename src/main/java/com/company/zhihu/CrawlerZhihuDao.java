@@ -127,7 +127,7 @@ public class CrawlerZhihuDao {
 	
 	public static String webmagicCrawler(String url) {
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
-		Html html = httpClientDownloader.download(url, 3, "UTF-8");
+		Html html = httpClientDownloader.download(url, "UTF-8");
 		String content = html.toString();
 		return content;
 	}
