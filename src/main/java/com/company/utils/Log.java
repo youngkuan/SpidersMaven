@@ -3,10 +3,10 @@ package com.company.utils;
 import java.util.List;
 import java.util.Set;
 
-import com.company.wiki_cn.bean.Domain;
-import com.company.wiki_cn.bean.FacetRelation;
-import com.company.wiki_cn.bean.Term;
-import com.company.wiki_cn.bean.Topic;
+import com.company.baike.wiki_cn.domain.Domain;
+import com.company.baike.wiki_cn.domain.FacetRelation;
+import com.company.baike.wiki_cn.domain.Term;
+import com.company.baike.wiki_cn.domain.Topic;
 
 /**  
  * 类说明   
