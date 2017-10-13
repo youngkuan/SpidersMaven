@@ -27,12 +27,11 @@ public class ExtractContentDAO {
 	
 	
 	public static void main(String[] args) throws Exception {
-		
+
 	}
 	
 	/**
 	 *  读取一级或者二级标题，确定 LinkedList 是有序的
-	 * @param htmlpath
 	 */
 	public static void reviewTitles(Document doc){
 		Log.log("-------------firstTitle----------------");
@@ -153,6 +152,10 @@ public class ExtractContentDAO {
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 三级标题内容 ----------------------");
 		/**
 		 * 获取每个三级标题的内容，为该标题与相邻标题下标之间的节点内容
@@ -230,6 +233,10 @@ public class ExtractContentDAO {
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 二级标题内容 ----------------------");
 		/**
 		 * 获取每个二级标题的内容，为该标题与相邻标题下标之间的节点内容
@@ -304,6 +311,10 @@ public class ExtractContentDAO {
 		int indexLen = firstTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
+		}
+
+		if (len == 0) {
+			return null;
 		}
 
 		Log.log("------------------ 一级标题内容 ----------------------");
@@ -443,6 +454,10 @@ public class ExtractContentDAO {
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 一级标题内图片----------------------");
 		
 		/**
@@ -522,6 +537,10 @@ public class ExtractContentDAO {
 		int indexLen = allTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
+		}
+
+		if (len == 0) {
+			return null;
 		}
 
 		Log.log("------------------ 二级标题内容 ----------------------");
@@ -613,6 +632,10 @@ public class ExtractContentDAO {
 		int indexLen = allTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
+		}
+
+		if (len == 0) {
+			return null;
 		}
 
 		Log.log("------------------ 三级标题内容 ----------------------");

@@ -142,7 +142,7 @@ public class CrawlerContentDAO {
 	/**
 	 * 得到一个主题的所有分面及其分面级数
 	 * 1. 数据结构为: FacetSimple
-	 * @param htmlpath
+	 * @param doc
 	 * @return 
 	 */
 	public static List<FacetSimple> getAllFacet(Document doc){
@@ -235,7 +235,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> firstTitle = ExtractContentDAO.getFirstTitle(doc);
 				if(firstTitle.size() != 0){
 					List<Assemble> firstContent = ExtractContentDAO.getFirstContent(doc); // 一级分面内容
-					assembleList.addAll(firstContent);
+					if (firstContent != null) {
+						assembleList.addAll(firstContent);
+					}
 				}
 			}
 			/**
@@ -245,7 +247,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> secondTitle = ExtractContentDAO.getSecondTitle(doc);
 				if(secondTitle.size() != 0){
 					List<Assemble> secondContent = ExtractContentDAO.getSecondContent(doc); // 二级分面内容
-					assembleList.addAll(secondContent);
+					if (secondContent != null) {
+						assembleList.addAll(secondContent);
+					}
 				}
 			}
 			/**
@@ -255,7 +259,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> thirdTitle = ExtractContentDAO.getThirdTitle(doc);
 				if(thirdTitle.size() != 0){
 					List<Assemble> thirdContent = ExtractContentDAO.getThirdContent(doc); // 三级分面内容
-					assembleList.addAll(thirdContent);
+					if (thirdContent != null) {
+						assembleList.addAll(thirdContent);
+					}
 				}
 			}
 		}
@@ -275,7 +281,7 @@ public class CrawlerContentDAO {
 	 * @param flagThird
 	 * @return
 	 */
-	public static List<Assemble> getAllContentNew(String domain, String topic, Document doc, 
+	public static List<Assemble> getAllContentNew(String domain, String topic, Document doc,
 			boolean flagFirst, boolean flagSecond, boolean flagThird){
 		List<Assemble> assembleResultList = new ArrayList<Assemble>();
 		List<Assemble> assembleList = getAllContent(doc, flagFirst, flagSecond, flagThird);
