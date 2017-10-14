@@ -216,7 +216,6 @@ public class MysqlReadWriteDAO {
 	 * 存储domain_layer，存储第n层领域术语到数据库 domain_layer 表格（List）
 	 * @param termList
 	 * @param domain
-	 * @param url
 	 * @param layer
 	 */
 	public static void storeDomainLayer(List<Term> termList, String domain, int layer){
@@ -243,7 +242,6 @@ public class MysqlReadWriteDAO {
 	 * 存储domain_topic，存储第n层领域术语到数据库 domain_topic 表格（Set）
 	 * @param termList
 	 * @param domain
-	 * @param url
 	 * @param layer
 	 */
 	public static void storeDomainTopic(Set<Term> termList, String domain, int layer){
@@ -269,8 +267,6 @@ public class MysqlReadWriteDAO {
 	 * 存储domain_topic，存储上下位关系主题表格
 	 * @param termSet
 	 * @param domain
-	 * @param url
-	 * @param layer
 	 */
 	public static void storeTopicShangXiaWei(Set<Term> termSet, String domain){
 		mysqlUtils mysql = new mysqlUtils();

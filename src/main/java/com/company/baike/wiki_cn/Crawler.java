@@ -22,7 +22,10 @@ import com.company.utils.Log;
 public class Crawler {
 
 	public static void main(String[] args) throws Exception {
-		cralwerAll();
+		//System.out.println("hello");
+//		cralwerAll();
+		String domain = "植物生理学";
+		crawler(domain);
 	}
 	
 	/**
@@ -39,8 +42,7 @@ public class Crawler {
 	/**
 	 * 爬取一门课程
 	 */
-	public static void crawler() throws Exception{
-		String domain = "植物生理学";
+	public static void crawler(String domain) throws Exception{
 		CrawlerDomainTopic.layerExtract(domain);
 		CrawlerDomainTopic.topicExtract(domain);
 		CrawlerContent.pipeline(domain);

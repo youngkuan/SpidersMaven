@@ -23,7 +23,11 @@ import com.company.baike.wiki_cn.domain.Topic;
 public class CrawlerContent {
 	
 	public static void main(String[] args) throws Exception {
-		store();
+//		store();
+		String topicUrl = "https://zh.wikipedia.org/wiki/%E7%96%8F%E8%8A%B1%E4%BB%99%E8%8C%85";
+		String topicHtml = DownloaderDAO.seleniumWikiCN(topicUrl);
+		Document doc = JsoupDao.parseHtmlText(topicHtml);
+		List<Assemble> assembleList = CrawlerContentDAO.getAllContentNew("植物生理学", "疏花仙茅", doc, true, true, true);
 	}
 	
 	/**

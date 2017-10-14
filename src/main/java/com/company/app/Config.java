@@ -16,14 +16,14 @@ public class Config {
 	 */
 	public static String PHANTOMJS_PATH = "D:\\phantomjs.exe";  // 无界面浏览器
 	public static String IE_PATH = "D:\\IEDriverServer.exe";  // IE模拟
-	public static String CHROME_PATH = "D:\\chromedriver.exe";  // Chrome模拟
+	public static String CHROME_PATH = "E:/workspace/java_workspace/chromedriver.exe";  // Chrome模拟
 	
 	/**
 	 * Mysql 配置
 	 */
 //	public static String MYSQL_URL = "jdbc:mysql://202.117.54.39:3306/quality?user=root&password=199306&characterEncoding=UTF8";
 //	public static String MYSQL_URL = "jdbc:mysql://202.117.54.39:3306/yotta2?user=root&password=199306&characterEncoding=UTF8";
-	public static String MYSQL_URL = "jdbc:mysql://202.117.54.39:3306/dmmooc?user=root&password=199306&characterEncoding=UTF8";
+	public static String MYSQL_URL = "jdbc:mysql://localhost:3306/yotta_create?user=root&password=root&characterEncoding=UTF8";
 
 	/**
 	 * Quora 爬虫参数  配置
@@ -43,7 +43,7 @@ public class Config {
 	public static String RELATION_TABLE = "datainput_relation";
 	public static String TERM_TABLE = "datainput_term"; // term的表名
 	public static String SYSTEM_TABLE = "system_step_status";
-	public static int IMAGE_COUNT = 2; // 设置每个分面下的图片数量
+	public static int IMAGE_COUNT = 7; // 设置每个分面下的图片数量
 	
 	/**
 	 * 中文维基  爬虫参数  配置
