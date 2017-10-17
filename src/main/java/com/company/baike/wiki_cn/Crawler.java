@@ -1,8 +1,6 @@
 package com.company.baike.wiki_cn;
 
-import com.company.utils.Log;
-
-/**  
+/**
  * 中文维基爬虫
  * 1. 爬取领域术语
  * 	1.1  读取domain表格获取所有领域名
@@ -22,30 +20,18 @@ import com.company.utils.Log;
 public class Crawler {
 
 	public static void main(String[] args) throws Exception {
-		//System.out.println("hello");
-//		cralwerAll();
-		String domain = "植物生理学";
-		crawler(domain);
-	}
-	
-	/**
-	 * 爬取所有课程
-	 * @throws Exception
-	 */
-	public static void cralwerAll() throws Exception{
-		Log.log("------------------------------------------begin topic crawler------------------------------------------");
-		CrawlerDomainTopic.store();
-		Log.log("------------------------------------------begin text crawler------------------------------------------");
-		CrawlerContent.store();
+		String domain = "软件工程";   // 测试课程  计算机科学史  农业史   汇编语言   计算机图形学    数据库   数据挖掘   Java
+		constructKGByDomainName(domain);
 	}
 	
 	/**
 	 * 爬取一门课程
 	 */
-	public static void crawler(String domain) throws Exception{
-		CrawlerDomainTopic.layerExtract(domain);
-		CrawlerDomainTopic.topicExtract(domain);
-		CrawlerContent.pipeline(domain);
+	public static void constructKGByDomainName(String domainName) throws Exception {
+		CrawlerDomainTopic.storeDomain(domainName);
+		CrawlerDomainTopic.layerExtract(domainName);
+		CrawlerDomainTopic.topicExtract(domainName);
+		CrawlerContent.storeKGByDomainName(domainName);
 	}
 
 }

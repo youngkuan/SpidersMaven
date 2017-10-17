@@ -21,6 +21,10 @@ public class Domain {
 	public void setClassName(String className) {
 		this.className = className;
 	}
+
+	public Domain() {
+	}
+
 	/**
 	 * @param classID
 	 * @param className

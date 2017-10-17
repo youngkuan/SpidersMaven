@@ -16,7 +16,7 @@ public class Config {
 	 */
 	public static String PHANTOMJS_PATH = "D:\\phantomjs.exe";  // 无界面浏览器
 	public static String IE_PATH = "D:\\IEDriverServer.exe";  // IE模拟
-	public static String CHROME_PATH = "E:/workspace/java_workspace/chromedriver.exe";  // Chrome模拟
+	public static String CHROME_PATH = "D:\\chromedriver.exe";  // Chrome模拟
 	
 	/**
 	 * Mysql 配置
@@ -60,8 +60,9 @@ public class Config {
 	public static String SPIDER_IMAGE_TABLE = "spider_image";
 	public static String ASSEMBLE_TEXT_TABLE = "assemble_text";
 	public static String ASSEMBLE_IMAGE_TABLE = "assemble_image";
-	
-	public static int CONTENTLENGTH = 30;
+	public static String ASSEMBLE_FRAGMENT_TABLE = "assemble_fragment";
+
+	public static int CONTENTLENGTH = 200;
 	
 	
 	/**
