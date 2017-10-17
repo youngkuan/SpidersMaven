@@ -21,12 +21,13 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-    	<groupId>org.jsoup</groupId>
-    	<artifactId>jsoup</artifactId>
-    	<version>1.7.2</version>
-    </dependency>
-    <dependency>
+      <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+      <dependency>
+          <groupId>org.jsoup</groupId>
+          <artifactId>jsoup</artifactId>
+          <version>1.7.2</version>
+      </dependency>
+      <dependency>
     	<groupId>net.sourceforge.jexcelapi</groupId>
     	<artifactId>jxl</artifactId>
     	<version>2.6.12</version>
@@ -46,10 +47,29 @@
     	<artifactId>webmagic-core</artifactId>
     	<version>0.6.0</version>
     </dependency>
+      <dependency>
+          <groupId>com.spreada.utils</groupId>
+          <artifactId>ZHConverter</artifactId>
+          <version>2.6.12</version>
+      </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
-    	<groupId>com.spreada.utils</groupId>
-    	<artifactId>ZHConverter</artifactId>
-    	<version>2.6.12</version>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.3</version>
     </dependency>
+      <!-- https://mvnrepository.com/artifact/com.github.nobodxbodon/zhconverter -->
+      <dependency>
+          <groupId>com.github.nobodxbodon</groupId>
+          <artifactId>zhconverter</artifactId>
+          <version>0.0.5</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+      <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.38</version>
+      </dependency>
+
   </dependencies>
 </project>

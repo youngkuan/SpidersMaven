@@ -27,12 +27,11 @@ public class ExtractContentDAO {
 	
 	
 	public static void main(String[] args) throws Exception {
-		
+
 	}
 	
 	/**
 	 *  读取一级或者二级标题，确定 LinkedList 是有序的
-	 * @param htmlpath
 	 */
 	public static void reviewTitles(Document doc){
 		Log.log("-------------firstTitle----------------");
@@ -153,6 +152,10 @@ public class ExtractContentDAO {
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 三级标题内容 ----------------------");
 		/**
 		 * 获取每个三级标题的内容，为该标题与相邻标题下标之间的节点内容
@@ -172,7 +175,7 @@ public class ExtractContentDAO {
 						content = Config.converter.convert(content);
 						Assemble assemble = new Assemble(title, content, 3);
 						assembleList.add(assemble);
-//						Log.log(content);
+						Log.log(content);
 					}
 				}
 			}
@@ -198,7 +201,7 @@ public class ExtractContentDAO {
 //					}
 					Assemble assemble = new Assemble(title, content, 3);
 					assembleList.add(assemble);
-//					Log.log(content);
+					Log.log(content);
 				}
 			}
 		}
@@ -230,6 +233,10 @@ public class ExtractContentDAO {
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 二级标题内容 ----------------------");
 		/**
 		 * 获取每个二级标题的内容，为该标题与相邻标题下标之间的节点内容
@@ -249,7 +256,7 @@ public class ExtractContentDAO {
 						content = Config.converter.convert(content);
 						Assemble assemble = new Assemble(title, content, 2);
 						assembleList.add(assemble);
-//						Log.log(content);
+						Log.log(content);
 					}
 				}
 			}
@@ -275,7 +282,7 @@ public class ExtractContentDAO {
 //					}
 					Assemble assemble = new Assemble(title, content, 2);
 					assembleList.add(assemble);
-//					Log.log(content);
+					Log.log(content);
 				}
 			}
 		}
@@ -296,14 +303,19 @@ public class ExtractContentDAO {
 		 * 寻找一级标题在节点链表的下标
 		 */
 		LinkedList<Integer> firstTitleIndex = getTitleIndex(firstTitle, nodes);
-		
+
 		/**
 		 *  比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
 		 */
 		int len = firstTitle.size();
 		int indexLen = firstTitleIndex.size();
+		Log.log("一级标题个数和一级标题下标个数：" + len + "," + indexLen);
 		if(len > indexLen){
 			len = indexLen;
+		}
+
+		if (len == 0) {
+			return null;
 		}
 
 		Log.log("------------------ 一级标题内容 ----------------------");
@@ -323,7 +335,7 @@ public class ExtractContentDAO {
 				content = Config.converter.convert(content);
 				Assemble assemble = new Assemble(title, content, 1);
 				assembleList.add(assemble);
-//				Log.log(content);
+				Log.log(content);
 			}
 		}
 		
@@ -340,7 +352,7 @@ public class ExtractContentDAO {
 			content = Config.converter.convert(content);
 			Assemble assemble = new Assemble(title, content, 1);
 			assembleList.add(assemble);
-//			Log.log(content);
+			Log.log(content);
 		}
 		return assembleList;
 	}
@@ -443,6 +455,10 @@ public class ExtractContentDAO {
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 一级标题内图片----------------------");
 		
 		/**
@@ -522,6 +538,10 @@ public class ExtractContentDAO {
 		int indexLen = allTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
+		}
+
+		if (len == 0) {
+			return null;
 		}
 
 		Log.log("------------------ 二级标题内容 ----------------------");
@@ -613,6 +633,10 @@ public class ExtractContentDAO {
 		int indexLen = allTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
+		}
+
+		if (len == 0) {
+			return null;
 		}
 
 		Log.log("------------------ 三级标题内容 ----------------------");
@@ -827,7 +851,7 @@ public class ExtractContentDAO {
 	 * @return
 	 */
 	public static LinkedList<Element> getNodes(Document doc){
-		Element mainContent = doc.select("div.mw-content-ltr").get(0);
+		Element mainContent = doc.select("div.mw-content-ltr").get(0).child(0);
 		Elements childs = mainContent.children();
 		LinkedList<Element> list = new LinkedList<Element>();
 		for (Element e : childs) {
@@ -847,7 +871,7 @@ public class ExtractContentDAO {
 				|| title.equals("参考文献") || title.equals("外部链接")|| title.equals("参考资料")
 				|| title.equals("外部连结") || title.equals("相关条目")
 				|| title.equals("参见") || title.equals("另见")|| title.equals("参看")
-				|| title.equals("参考") || title.equals("参照")
+				|| title.equals("参考") || title.equals("参照") || title.equals("参阅")
 				|| title.equals("注释") || title.equals("延伸阅读"); // 判断标题是否为无用的
 		return useless;
 	}
@@ -870,7 +894,7 @@ public class ExtractContentDAO {
 			}
 //			Log.log("post time is : " + time);
 		} else {
-			Log.log("crawler time has some bugs ...");
+			Log.log("constructKGByDomainName time has some bugs ...");
 		}
 		return time;
 	}

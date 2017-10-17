@@ -1,143 +1,40 @@
 package com.company.baike.wiki_cn;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
+import com.company.app.Config;
+import com.company.baike.wiki_cn.domain.Assemble;
+import com.company.baike.wiki_cn.domain.AssembleImage;
+import com.company.utils.JsoupDao;
+import com.company.utils.Log;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.company.utils.JsoupDao;
-import com.company.utils.Log;
-import com.spreada.utils.chinese.ZHConverter;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- * 解析中文维基百科页面
- * 1. 原来的程序返回的是facet和content的hashmap
+ * 解析中文维基百科页面（保存碎片标签到fragment表格中）
+ * 1. 现在返回的Assemble的List对象集合
  * 2. 三级分面信息
- * 3. 每一级分面有一个碎片文本，内容为两个标题之间的所有内容
+ * 3. 每一级分面有多个碎片，按照一个p标签作为一个碎片文本
  * @author yuanhao
  *
  */
-public class ExtractContentOldDAO {
+public class ExtractFragmentDAO {
 
-	private static String path = "F:\\00-Yotta数据爬取---MOOC需求\\10-中文维基百科\\数据结构\\html";
-	private static ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);// 转化为简体中文
-	
 	public static void main(String[] args) throws Exception {
-		test();
-	}
-	
-	/**
-	 *  单个中文维基页面解析测试程序
-	 * @throws Exception
-	 */
-	public static void test() throws Exception{
-		
-		/**
-		 * 设置解析参数
-		 */
-//		String filePath = path + "\\" + "维基百科_图 (数学).html";
-//		String filePath = path + "\\" + "维基百科_链表.html";
-		String filePath = path + "\\" + "维基百科_R树.html";
-		Log.log("now is processing : " + filePath);
-		Document doc = JsoupDao.parsePathText(filePath);
-		
-		/**
-		 * 测试解析小程序
-		 */
-//		getPostTime(doc);
-//		reviewTitles(filePath);
-//		getTitleRelationWiki(doc);
-		
-		/**
-		 * 解析所有内容
-		 */
-//		getAllContent(doc, false, false, false); // 只有summary内容
-//		getAllContent(doc, true, false, false); // summary内容 + 一级标题内容
-//		getAllContent(doc, true, true, false); // summary内容 + 一级和二级标题内容
-		getAllContent(doc, true, true, true); // summary内容 + 一级/二级/三级标题内容
-	}
-	
-	/**
-	 *  读取一级或者二级标题，确定 LinkedList 是有序的
-	 * @param htmlpath
-	 */
-	public static void reviewTitles(String htmlpath){
-		Document doc = JsoupDao.parsePathText(htmlpath);
-		Log.log("-------------firstTitle----------------");
-		LinkedList<String> firstTitle = getFirstTitle(doc);
-		Log.log(firstTitle);
-		Log.log("-------------secondTitle----------------");
-		LinkedList<String> secondTitle = getSecondTitle(doc);
-		Log.log(secondTitle);
-		Log.log("-------------thirdTitle----------------");
-		LinkedList<String> thirdTitle = getThirdTitle(doc);
-		Log.log(thirdTitle);
-		Log.log("-------------allTitle----------------");
-		LinkedList<String> allTitle = getAllTitle(doc);
-		Log.log(allTitle);
-		Log.log("--------------title index---------------");
-		LinkedList<Element> nodes = getNodes(doc);
-		LinkedList<Integer> firstTitleIndex = getTitleIndex(firstTitle, nodes);
-		compareTitleIndex(firstTitle, firstTitleIndex);
-		LinkedList<Integer> secondTitleIndex = getTitleIndex(secondTitle, nodes);
-		compareTitleIndex(secondTitle, secondTitleIndex);
-		LinkedList<Integer> thirdTitleIndex = getTitleIndex(thirdTitle, nodes);
-		compareTitleIndex(thirdTitle, thirdTitleIndex);
-		LinkedList<Integer> allTitleIndex = getTitleIndex(allTitle, nodes);
-		compareTitleIndex(allTitle, allTitleIndex);
-		Log.log("--------------title content---------------");
-//		HashMap<String, String> firstContent = getFirstContent(doc);
-		getFirstContent(doc);
+		String topicName = "犁";
+		String topicUrl = "https://zh.wikipedia.org/wiki/" + URLEncoder.encode(topicName);
+		String topicHtml = DownloaderDAO.seleniumWikiCN(topicUrl);
+		Document doc = JsoupDao.parseHtmlText(topicHtml);
+//		getSpecialContent(doc);
+//		getSummary(doc);
+//		getFirstContent(doc);
 		getSecondContent(doc);
-		getThirdContent(doc);
-		getSummary(doc);
-	}
-	
-	/**
-	 * 将从"摘要"到各级标题的所有分面内容全部存到一起
-	 * @param doc
-	 * @param flagFirst  一级标题标志位
-	 * @param flagSecond  二级标题标志位
-	 * @param flagThird  三级标题标志位
-	 * @return
-	 */
-	public static HashMap<String, String> getAllContent(Document doc, 
-										boolean flagFirst, boolean flagSecond, boolean flagThird){
-		
-		HashMap<String, String> map = new HashMap<String, String>();
-		
-		Elements mainContents = doc.select("div#mw-content-text").select("span.mw-headline");
-		if(mainContents.size() == 0){
-			HashMap<String, String> specialContent = getSpecialContent(doc); // 没有目录栏的词条信息
-			map.putAll(specialContent);
-		} else {
-			HashMap<String, String> summaryContent = getSummary(doc); // 摘要内容
-			map.putAll(summaryContent);
-			if(flagFirst){ // flagFirst 为 true，保留一级分面数据
-				LinkedList<String> firstTitle = getFirstTitle(doc);
-				if(firstTitle.size() != 0){
-					HashMap<String, String> firstContent = getFirstContent(doc); // 一级分面内容
-					map.putAll(firstContent);
-				}
-			}
-			if(flagSecond){ // flagSecond 为 true，保留二级分面数据
-				LinkedList<String> secondTitle = getSecondTitle(doc);
-				if(secondTitle.size() != 0){
-					HashMap<String, String> secondContent = getSecondContent(doc); // 二级分面内容
-					map.putAll(secondContent);
-				}
-			}
-			if(flagThird){ // flagThird 为 true，保留三级分面数据
-				LinkedList<String> thirdTitle = getThirdTitle(doc);
-				if(thirdTitle.size() != 0){
-					HashMap<String, String> thirdContent = getThirdContent(doc); // 三级分面内容
-					map.putAll(thirdContent);
-				}
-			}
-		}
-		return map;
+//		getThirdContent(doc);
 	}
 	
 	/**
@@ -145,16 +42,18 @@ public class ExtractContentOldDAO {
 	 * @param doc
 	 * @return
 	 */
-	public static HashMap<String, String> getSpecialContent(Document doc){
+	public static List<Assemble> getSpecialContent(Document doc){
+		List<Assemble> assembleList = new ArrayList<Assemble>();
 		Log.log("------------------ 页面所有内容 ----------------------");
-		HashMap<String, String> map = new HashMap<String, String>();
 		Elements para = doc.select("div#mw-content-text");
 		if(para.size() != 0){
-			String con = para.get(0).text();
-			con = converter.convert(con);
-			map.put("摘要", con);
+			String con = para.get(0).html();
+			Log.log(con);
+//			con = Config.converter.convert(con);
+			Assemble assemble = new Assemble("摘要", con, 1);
+			assembleList.add(assemble);
 		}
-		return map;
+		return assembleList;
 	}
 	
 	/**
@@ -162,14 +61,16 @@ public class ExtractContentOldDAO {
 	 * @param doc
 	 * @return
 	 */
-	public static HashMap<String, String> getSummary(Document doc) {
+	public static List<Assemble> getSummary(Document doc) {
+		List<Assemble> assembleList = new ArrayList<Assemble>();
 		Log.log("------------------ 摘要内容 ----------------------");
 		LinkedList<Element> list = getNodes(doc);
-		HashMap<String, String> map = new HashMap<String, String>();
 		String summary = "";
 		int tocId = 0; 
 		
-		// 获取summary的小标
+		/**
+		 * 获取summary的下标
+		 */
 		for (int i = 0; i < list.size(); i++) {
 			Element child = list.get(i);
 			Elements toc = child.select("div#toc");
@@ -185,15 +86,18 @@ public class ExtractContentOldDAO {
 			}
 		}
 		
-		// 获取summary内容
+		/**
+		 * 获取summary内容
+		 */
 		for (int i = 0; i < tocId; i++) {
 			Element child = list.get(i);
-			summary = summary + child.text() + "\n";
-			summary = converter.convert(summary);
+			summary = child.html();
+//			summary = Config.converter.convert(summary);
+			Log.log("摘要" + "--->" + summary);
+			Assemble assemble = new Assemble("摘要", summary, 1);
+			assembleList.add(assemble);
 		}
-		Log.log("摘要" + "\n" + summary);
-		map.put("摘要", summary);
-		return map;
+		return assembleList;
 	}
 	
 	/**
@@ -201,24 +105,34 @@ public class ExtractContentOldDAO {
 	 * @param doc
 	 * @return
 	 */
-	public static HashMap<String, String> getThirdContent(Document doc){
-		HashMap<String, String> secondContent = new HashMap<String, String>();
+	public static List<Assemble> getThirdContent(Document doc){
+		List<Assemble> assembleList = new ArrayList<Assemble>();
 		LinkedList<String> allTitle = getAllTitle(doc);
 		LinkedList<String> thirdTitle = getThirdTitle(doc);
 		LinkedList<Element> nodes = getNodes(doc);
 
-		// 寻找一级和二级标题在节点链表的下标
+		/**
+		 * 寻找一级和二级标题在节点链表的下标
+		 */
 		LinkedList<Integer> allTitleIndex = getTitleIndex(allTitle, nodes);
 
-		// 比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
+		/**
+		 * 比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
+		 */
 		int len = allTitle.size();
 		int indexLen = allTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 三级标题内容 ----------------------");
-		// 获取每个三级标题的内容，为该标题与相邻标题下标之间的节点内容
+		/**
+		 * 获取每个三级标题的内容，为该标题与相邻标题下标之间的节点内容
+		 */
 		for(int i = 0; i < len - 1; i++){
 			String title = allTitle.get(i);
 			for(int j = 0; j < thirdTitle.size(); j++){
@@ -230,16 +144,19 @@ public class ExtractContentOldDAO {
 					Log.log(title + " ---> " + begin + "," + end);
 					for(int k = begin + 1; k < end; k++){
 						Element node = nodes.get(k);
-						content += node.text();
-						content = converter.convert(content);
+						content = node.html();
+//						content = Config.converter.convert(content);
+						Assemble assemble = new Assemble(title, content, 3);
+						assembleList.add(assemble);
+						Log.log(content);
 					}
-					secondContent.put(title, content);
-					Log.log(content);
 				}
 			}
 		}
 
-		// 所有标题的最后一个标题是否为三级标题
+		/**
+		 * 所有标题的最后一个标题是否为三级标题
+		 */
 		String title = allTitle.get(len - 1);
 		for(int j = 0; j < thirdTitle.size(); j++){
 			String thiTitle = thirdTitle.get(j);
@@ -249,18 +166,19 @@ public class ExtractContentOldDAO {
 				Log.log(title + " ---> " + begin + "," + (nodes.size()-1));
 				for(int k = begin + 1; k < nodes.size(); k++){
 					Element node = nodes.get(k);
-					content += node.text();
-					content = converter.convert(content);
+					content = node.html();
+//					content = Config.converter.convert(content);
+//					String imgTxt = "<img src=";
+//					if(imgTxt.contains(imgTxt)){
+//						content = content.substring(0, content.indexOf(imgTxt));
+//					}
+					Assemble assemble = new Assemble(title, content, 3);
+					assembleList.add(assemble);
+					Log.log(content);
 				}
-				String imgTxt = "<img src=";
-				if(imgTxt.contains(imgTxt)){
-					content = content.substring(0, content.indexOf(imgTxt));
-				}
-				secondContent.put(title, content);
-				Log.log(content);
 			}
 		}
-		return secondContent;
+		return assembleList;
 	}
 
 	/**
@@ -268,24 +186,34 @@ public class ExtractContentOldDAO {
 	 * @param doc
 	 * @return
 	 */
-	public static HashMap<String, String> getSecondContent(Document doc){
-		HashMap<String, String> secondContent = new HashMap<String, String>();
+	public static List<Assemble> getSecondContent(Document doc){
+		List<Assemble> assembleList = new ArrayList<Assemble>();
 		LinkedList<String> allTitle = getAllTitle(doc);
 		LinkedList<String> secondTitle = getSecondTitle(doc);
 		LinkedList<Element> nodes = getNodes(doc);
 
-		// 寻找一级和二级标题在节点链表的下标
+		/**
+		 * 寻找一级和二级标题在节点链表的下标
+		 */
 		LinkedList<Integer> allTitleIndex = getTitleIndex(allTitle, nodes);
 		
-		// 比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
+		/**
+		 * 比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
+		 */
 		int len = allTitle.size();
 		int indexLen = allTitleIndex.size();
 		if(len > indexLen){
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 二级标题内容 ----------------------");
-		// 获取每个二级标题的内容，为该标题与相邻标题下标之间的节点内容
+		/**
+		 * 获取每个二级标题的内容，为该标题与相邻标题下标之间的节点内容
+		 */
 		for(int i = 0; i < len - 1; i++){
 			String title = allTitle.get(i);
 			for(int j = 0; j < secondTitle.size(); j++){
@@ -297,16 +225,19 @@ public class ExtractContentOldDAO {
 					Log.log(title + " ---> " + begin + "," + end);
 					for(int k = begin + 1; k < end; k++){
 						Element node = nodes.get(k);
-						content += node.text();
-						content = converter.convert(content);
+						content = node.html();
+//						content = Config.converter.convert(content);
+						Assemble assemble = new Assemble(title, content, 2);
+						assembleList.add(assemble);
+						Log.log(content);
 					}
-					secondContent.put(title, content);
-					Log.log(content);
 				}
 			}
 		}
 		
-		// 所有标题的最后一个标题是否为二级标题
+		/**
+		 * 所有标题的最后一个标题是否为二级标题
+		 */
 		String title = allTitle.get(len - 1);
 		for(int j = 0; j < secondTitle.size(); j++){
 			String secTitle = secondTitle.get(j);
@@ -316,18 +247,19 @@ public class ExtractContentOldDAO {
 				Log.log(title + " ---> " + begin + "," + (nodes.size()-1));
 				for(int k = begin + 1; k < nodes.size(); k++){
 					Element node = nodes.get(k);
-					content += node.text();
-					content = converter.convert(content);
+					content = node.html();
+//					content = Config.converter.convert(content);
+//					String imgTxt = "<img src=";
+//					if(imgTxt.contains(imgTxt)){
+//						content = content.substring(0, content.indexOf(imgTxt));
+//					}
+					Assemble assemble = new Assemble(title, content, 2);
+					assembleList.add(assemble);
+					Log.log(content);
 				}
-				String imgTxt = "<img src=";
-				if(imgTxt.contains(imgTxt)){
-					content = content.substring(0, content.indexOf(imgTxt));
-				}
-				secondContent.put(title, content);
-				Log.log(content);
 			}
 		}
-		return secondContent;
+		return assembleList;
 	}
 	
 	/**
@@ -335,23 +267,35 @@ public class ExtractContentOldDAO {
 	 * @param doc
 	 * @return
 	 */
-	public static HashMap<String, String> getFirstContent(Document doc){
-		HashMap<String, String> firstContent = new HashMap<String, String>();
+	public static List<Assemble> getFirstContent(Document doc){
+		List<Assemble> assembleList = new ArrayList<Assemble>();
 		LinkedList<String> firstTitle = getFirstTitle(doc);
 		LinkedList<Element> nodes = getNodes(doc);
 		
-		// 寻找一级标题在节点链表的下标
+		/**
+		 * 寻找一级标题在节点链表的下标
+		 */
 		LinkedList<Integer> firstTitleIndex = getTitleIndex(firstTitle, nodes);
-		
-		// 比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
+
+		/**
+		 *  比较标题链表和对应的下标链表的大小是否相同，原则上是相同的，不相同说明网页存在问题等。。。
+		 */
 		int len = firstTitle.size();
 		int indexLen = firstTitleIndex.size();
+		Log.log("一级标题个数和一级标题下标个数：" + len + "," + indexLen);
 		if(len > indexLen){
 			len = indexLen;
 		}
 
+		if (len == 0) {
+			return null;
+		}
+
 		Log.log("------------------ 一级标题内容 ----------------------");
-		// 获取每个一级标题的内容，为该标题与相邻标题下标之间的节点内容
+		
+		/**
+		 * 获取每个一级标题的内容，为该标题与相邻标题下标之间的节点内容
+		 */
 		for(int i = 0; i < len - 1; i++){
 			String title = firstTitle.get(i);
 			String content = "";
@@ -360,32 +304,33 @@ public class ExtractContentOldDAO {
 			Log.log(title + " ---> " + begin + "," + end);
 			for(int j = begin + 1; j < end; j++){
 				Element node = nodes.get(j);
-				content += node.text();
-				content = converter.convert(content);
+				content = node.html();
+//				content = Config.converter.convert(content);
+				Assemble assemble = new Assemble(title, content, 1);
+				assembleList.add(assemble);
+				Log.log(content);
 			}
-			firstContent.put(title, content);
-			Log.log(content);
 		}
-		// 一级标题最后一个标题为该下标到节点最后
+		
+		/**
+		 * 一级标题最后一个标题为该下标到节点最后
+		 */
 		String title = firstTitle.get(len - 1);
 		String content = "";
 		int begin = firstTitleIndex.get(len - 1);
 		Log.log(title + " ---> " + begin + "," + (nodes.size()-1));
 		for(int j = begin + 1; j < nodes.size(); j++){
 			Element node = nodes.get(j);
-			content += node.text();
-			content = converter.convert(content);
+			content = node.html();
+//			content = Config.converter.convert(content);
+			Assemble assemble = new Assemble(title, content, 1);
+			assembleList.add(assemble);
+			Log.log(content);
 		}
-		String imgTxt = "<img src=";
-		if(imgTxt.contains(imgTxt)){
-			content = content.substring(0, content.indexOf(imgTxt));
-		}
-		firstContent.put(title, content);
-		Log.log(content);
-		
-		return firstContent;
+		return assembleList;
 	}
 	
+
 	/**
 	 * 寻找一级标题在节点链表的下标
 	 * @param titleList
@@ -402,7 +347,7 @@ public class ExtractContentOldDAO {
 				Elements h2 = node.select("span.mw-headline");
 				if(h2.size() != 0){
 					String level1 = h2.get(0).text();
-					level1 = converter.convert(level1);
+					level1 = Config.converter.convert(level1);
 					if(title.equals(level1)){// 匹配到一级标题的下标
 						firstTitleIndex.add(j);
 					}
@@ -412,7 +357,11 @@ public class ExtractContentOldDAO {
 		return firstTitleIndex;
 	}
 
-	// 读取一下标题的下标，确认是否正确
+	/**
+	 * 读取一下标题的下标，确认是否正确
+	 * @param title
+	 * @param titleIndex
+	 */
 	public static void compareTitleIndex(LinkedList<String> title, LinkedList<Integer> titleIndex){
 		Log.log("------------------ compare title and index ------------------");
 		// 读取一下标题的下标，确认是否正确
@@ -446,7 +395,7 @@ public class ExtractContentOldDAO {
 		if(titles.size() != 0){
 			for(int i = 0; i < titles.size(); i++){
 				String head = titles.get(i).text();
-				head = converter.convert(head);
+				head = Config.converter.convert(head);
 				Boolean flag = delTitle(head);
 				if(!flag){
 					allTitle.add(head);
@@ -467,7 +416,7 @@ public class ExtractContentOldDAO {
 		if(titles.size() != 0){
 			for(int i = 0; i < titles.size(); i++){
 				String level3 = titles.get(i).select("span.mw-headline").get(0).text();
-				level3 = converter.convert(level3);
+				level3 = Config.converter.convert(level3);
 				Boolean flag = delTitle(level3);
 				if(!flag){
 					thirdTitle.add(level3);
@@ -488,7 +437,7 @@ public class ExtractContentOldDAO {
 		if(titles.size() != 0){
 			for(int i = 0; i < titles.size(); i++){
 				String level2 = titles.get(i).select("span.mw-headline").get(0).text();
-				level2 = converter.convert(level2);
+				level2 = Config.converter.convert(level2);
 				Boolean flag = delTitle(level2);
 				if(!flag){
 					secondTitle.add(level2);
@@ -511,7 +460,7 @@ public class ExtractContentOldDAO {
 				Elements lel = titles.get(i).select("span.mw-headline");
 				if(lel.size() != 0){
 					String level1 = lel.get(0).text();
-					level1 = converter.convert(level1);
+					level1 = Config.converter.convert(level1);
 					Boolean flag = delTitle(level1);
 					if(!flag){
 						firstTitle.add(level1);
@@ -528,7 +477,7 @@ public class ExtractContentOldDAO {
 	 * @return
 	 */
 	public static LinkedList<Element> getNodes(Document doc){
-		Element mainContent = doc.select("div.mw-content-ltr").get(0);
+		Element mainContent = doc.select("div.mw-content-ltr").get(0).child(0);
 		Elements childs = mainContent.children();
 		LinkedList<Element> list = new LinkedList<Element>();
 		for (Element e : childs) {
@@ -548,7 +497,7 @@ public class ExtractContentOldDAO {
 				|| title.equals("参考文献") || title.equals("外部链接")|| title.equals("参考资料")
 				|| title.equals("外部连结") || title.equals("相关条目")
 				|| title.equals("参见") || title.equals("另见")|| title.equals("参看")
-				|| title.equals("参考") || title.equals("参照")
+				|| title.equals("参考") || title.equals("参照") || title.equals("参阅")
 				|| title.equals("注释") || title.equals("延伸阅读"); // 判断标题是否为无用的
 		return useless;
 	}
@@ -564,13 +513,12 @@ public class ExtractContentOldDAO {
 		if (content.size() != 0) {
 			Elements timeItem = content;
 			time = timeItem.get(0).text();
-//			time = postTimeDeal(time);
 			try {
 				time = postTimeDeal(time);
 			} catch (Exception e) {
 				time = "2016-01-01 00:00:00";
 			}
-			Log.log("post time is : " + time);
+//			Log.log("post time is : " + time);
 		} else {
 			Log.log("constructKGByDomainName time has some bugs ...");
 		}
@@ -611,21 +559,25 @@ public class ExtractContentOldDAO {
 		LinkedList<String> results = new LinkedList<String>();// 二级/三级标题对应到一级标题之后的标题
 		HashMap<String, String> relation = new HashMap<String, String>();
 
-		// 获取标题
+		/**
+		 * 获取标题
+		 */
 		Elements titles = doc.select("div#toc").select("li");
 		Log.log(titles.size());
 		if(titles.size()!=0){
 			for(int i = 0; i < titles.size(); i++){
 				String index = titles.get(i).child(0).child(0).text();
 				String text = titles.get(i).child(0).child(1).text();
-				text = converter.convert(text);
+				text = Config.converter.convert(text);
 				Log.log(index + " " + text);
 				indexs.add(index);
 				facets.add(text);
 				results.add(text);
 			}
 
-			// 将二级/三级标题全部匹配到对应的一级标题
+			/**
+			 * 将二级/三级标题全部匹配到对应的一级标题
+			 */
 			Log.log("--------------------------------------------");
 			for(int i = 0; i < indexs.size(); i++){
 				String index = indexs.get(i);
@@ -641,7 +593,9 @@ public class ExtractContentOldDAO {
 				}
 			}
 
-			//打印最新的标题信息，确定更新二级/三级标题成功
+			/**
+			 * 打印最新的标题信息，确定更新二级/三级标题成功
+			 */
 			Log.log("--------------------------------------------");
 			for(int i = 0; i < facets.size(); i++){
 				relation.put(facets.get(i), results.get(i));
@@ -654,6 +608,34 @@ public class ExtractContentOldDAO {
 
 		return relation;
 	}
+	
+	/**
+	 * 获取字符串的长度，如果有中文，则每个中文字符计为2位
+	 * @param value 指定的字符串
+	 * @return 
+	 * @return 字符串的长度
+	 */
+	public static int getContentLen(String value) {
+//		String value = "hello你好";
+		int valueLength = 0;
+		String chinese = "[\u0391-\uFFE5]";
+		/* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+		for (int i = 0; i < value.length(); i++) {
+			/* 获取一个字符 */
+			String temp = value.substring(i, i + 1);
+			/* 判断是否为中文字符 */
+			if (temp.matches(chinese)) {
+				/* 中文字符长度为2 */
+				valueLength += 2;
+			} else {
+				/* 其他字符长度为1 */
+				valueLength += 1;
+			}
+		}
+		Log.log(valueLength);
+		return valueLength;
+	}
+	
 	
 }
 

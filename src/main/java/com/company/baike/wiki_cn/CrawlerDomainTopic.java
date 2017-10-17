@@ -59,6 +59,20 @@ public class CrawlerDomainTopic {
 		}
 		
 	}
+
+	/**
+	 * 根据领域名存储领域
+	 * @param domainName
+	 */
+	public static void storeDomain(String domainName) {
+		List<Domain> list = new ArrayList<Domain>();
+		Domain domain = new Domain();
+		domain.setClassName(domainName);
+		list.add(domain);
+		if (!MysqlReadWriteDAO.judgeByClass(Config.DOMAIN_TABLE, domainName)) {
+			MysqlReadWriteDAO.storeDomain(list);
+		}
+	}
 	
 	/**
 	 * 获取三层领域术语（某门所有课程）

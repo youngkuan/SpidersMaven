@@ -158,38 +158,56 @@ public class MysqlReadWriteDAO {
 	}
 
 	/**
-		 * 读取spider，得到所有碎片信息（按照课程）
-		 * @return 
-		 */
-		public static List<Text> getSpider(String domain) throws Exception {
-			List<Text> textList = new ArrayList<Text>();
-			mysqlUtils mysql = new mysqlUtils();
-			String sql = "select * from " + Config.SPIDER_TEXT_TABLE + " where ClassName=?";
-			List<Object> params = new ArrayList<Object>();
-			params.add(domain);
-			try {
-				List<Map<String, Object>> results = mysql.returnMultipleResult(sql, params);
-				for (int i = 0; i < results.size(); i++) {
-					Map<String, Object> result = results.get(i);
-	//				int fragmentID = Integer.parseInt(result.get("FragmentID").toString());
-					String fragmentContent = result.get("FragmentContent").toString();
-					String fragmentUrl = result.get("FragmentUrl").toString();
-					String fragmentPostTime = result.get("FragmentPostTime").toString();
-					String fragmentScratchTime = result.get("FragmentScratchTime").toString();
-					int termID = Integer.parseInt(result.get("TermID").toString());
-					String termName = result.get("TermName").toString();
-					String className = result.get("ClassName").toString();
-					Text text = new Text(fragmentContent, fragmentUrl, fragmentPostTime, fragmentScratchTime,
-							termID, termName, className);
-					textList.add(text);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				mysql.closeconnection();
+	 * 读取spider，得到所有碎片信息（按照课程）
+	 * @return
+	 */
+	public static List<Text> getSpider(String domain) throws Exception {
+		List<Text> textList = new ArrayList<Text>();
+		mysqlUtils mysql = new mysqlUtils();
+		String sql = "select * from " + Config.SPIDER_TEXT_TABLE + " where ClassName=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(domain);
+		try {
+			List<Map<String, Object>> results = mysql.returnMultipleResult(sql, params);
+			for (int i = 0; i < results.size(); i++) {
+				Map<String, Object> result = results.get(i);
+//				int fragmentID = Integer.parseInt(result.get("FragmentID").toString());
+				String fragmentContent = result.get("FragmentContent").toString();
+				String fragmentUrl = result.get("FragmentUrl").toString();
+				String fragmentPostTime = result.get("FragmentPostTime").toString();
+				String fragmentScratchTime = result.get("FragmentScratchTime").toString();
+				int termID = Integer.parseInt(result.get("TermID").toString());
+				String termName = result.get("TermName").toString();
+				String className = result.get("ClassName").toString();
+				Text text = new Text(fragmentContent, fragmentUrl, fragmentPostTime, fragmentScratchTime,
+						termID, termName, className);
+				textList.add(text);
 			}
-			return textList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mysql.closeconnection();
 		}
+		return textList;
+	}
+
+	/**
+	 * 存储domain，保存领域名信息
+	 * @param domain 领域
+	 */
+	public static void storeDomain(Domain domain){
+		mysqlUtils mysql = new mysqlUtils();
+		String sql = "insert into " + Config.DOMAIN_TABLE + " (ClassID, ClassName) VALUES(?, ?);";
+		List<Object> params = new ArrayList<Object>();
+		params.add(domain.getClassID());
+		params.add(domain.getClassName());
+		try {
+			mysql.addDeleteModify(sql, params);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mysql.closeconnection();
+	}
 
 	/**
 	 * 存储domain，保存领域名信息
@@ -216,7 +234,6 @@ public class MysqlReadWriteDAO {
 	 * 存储domain_layer，存储第n层领域术语到数据库 domain_layer 表格（List）
 	 * @param termList
 	 * @param domain
-	 * @param url
 	 * @param layer
 	 */
 	public static void storeDomainLayer(List<Term> termList, String domain, int layer){
@@ -243,7 +260,6 @@ public class MysqlReadWriteDAO {
 	 * 存储domain_topic，存储第n层领域术语到数据库 domain_topic 表格（Set）
 	 * @param termList
 	 * @param domain
-	 * @param url
 	 * @param layer
 	 */
 	public static void storeDomainTopic(Set<Term> termList, String domain, int layer){
@@ -269,8 +285,6 @@ public class MysqlReadWriteDAO {
 	 * 存储domain_topic，存储上下位关系主题表格
 	 * @param termSet
 	 * @param domain
-	 * @param url
-	 * @param layer
 	 */
 	public static void storeTopicShangXiaWei(Set<Term> termSet, String domain){
 		mysqlUtils mysql = new mysqlUtils();
@@ -392,7 +406,7 @@ public class MysqlReadWriteDAO {
 				/**
 				 * 碎片采集：存储spider_text数据表
 				 */
-				content = assemble.getFacetName() + "：\n" + content; //在文本内容中加上分面内容
+//				content = assemble.getFacetName() + "：\n" + content; //在文本内容中加上分面内容
 				mysqlUtils mysql = new mysqlUtils();
 				String sqlSpider = "insert into " + Config.SPIDER_TEXT_TABLE + "(FragmentContent, FragmentUrl, FragmentPostTime,"
 						+ "FragmentScratchTime, TermID, TermName, ClassName) values(?, ?, ?, ?, ?, ?, ?)";
@@ -550,20 +564,58 @@ public class MysqlReadWriteDAO {
 		}
 		
 	}
+
+	/**
+	 * 存储assemble_fragment
+	 * @return
+	 */
+	public static void storeFragment(String domain, int topicID, String topicName, String topicUrl, List<Assemble> assembleFragmentList) throws Exception {
+		for(int j = 0; j < assembleFragmentList.size(); j++){
+			Assemble assemble = assembleFragmentList.get(j);
+			String facet = assemble.getFacetName();
+			String content = assemble.getFacetContent();
+			int facetLayer = assemble.getFacetLayer();
+			if(!content.equals("")){ // content内容不为空进行存储
+				/**
+				 * 碎片装配：存储assemble_fragment数据表
+				 */
+				mysqlUtils mysql = new mysqlUtils();
+				String sqlAssemble = "insert into " + Config.ASSEMBLE_FRAGMENT_TABLE + "(FragmentContent, "
+						+ "FragmentScratchTime, TermID, TermName, FacetName, FacetLayer, ClassName) "
+						+ "values(?, ?, ?, ?, ?, ?, ?)";
+				List<Object> paramsAssemble = new ArrayList<Object>();
+				paramsAssemble.add(content);
+				paramsAssemble.add(Time.getSystemTime());
+				paramsAssemble.add(topicID);
+				paramsAssemble.add(topicName);
+				paramsAssemble.add(facet);
+				paramsAssemble.add(facetLayer);
+				paramsAssemble.add(domain);
+				try {
+					mysql.addDeleteModify(sqlAssemble, paramsAssemble);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					mysql.closeconnection();
+				}
+			}
+		}
+
+	}
 	
 	/**
 	 * 判断表格，判断某门课程的数据是否已经在这个数据表中存在
 	 * 适用表格：domain_layer，domain_topic，dependency
 	 * @param table
-	 * @param domain
+	 * @param domainName
 	 * @return true表示该领域已经爬取
 	 */
-	public static Boolean judgeByClass(String table, String domain){
+	public static Boolean judgeByClass(String table, String domainName){
 		Boolean exist = false;
 		mysqlUtils mysql = new mysqlUtils();
 		String sql = "select * from " + table + " where ClassName=?";
 		List<Object> params = new ArrayList<Object>();
-		params.add(domain);
+		params.add(domainName);
 		try {
 			List<Map<String, Object>> results = mysql.returnMultipleResult(sql, params);
 			if (results.size()!=0) {
