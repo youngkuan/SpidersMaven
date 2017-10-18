@@ -54,8 +54,12 @@ public class Config {
 	public static String FACET_TABLE = "facet";
 	public static String FACET_RELATION_TABLE = "facet_relation";
 	public static String DOMAIN_LAYER_TABLE = "domain_layer";
+	public static String DOMAIN_LAYER_FUZHU_TABLE = "domain_layer_fuzhu";
+	public static String DOMAIN_LAYER_FUZHU2_TABLE = "domain_layer_fuzhu2";
 	public static String DOMAIN_TOPIC_TABLE = "domain_topic";
 	public static String DOMAIN_TOPIC_RELATION_TABLE = "domain_topic_relation";
+	public static String DOMAIN_LAYER_RELATION_TABLE = "domain_layer_relation";
+	public static String DOMAIN_LAYER_RELATION2_TABLE = "domain_layer_relation2";
 	public static String SPIDER_TEXT_TABLE = "spider_text";
 	public static String SPIDER_IMAGE_TABLE = "spider_image";
 	public static String ASSEMBLE_TEXT_TABLE = "assemble_text";

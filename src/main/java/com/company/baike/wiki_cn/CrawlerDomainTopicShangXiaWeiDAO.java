@@ -38,7 +38,7 @@ import jxl.write.biff.RowsExceededException;
  * @author 郑元浩
  * @date 2016年12月19日
  */
-public class CrawlerTopicShangXiaWeiDAO {
+public class CrawlerDomainTopicShangXiaWeiDAO {
 
 	public static void main(String[] args) {
 		/**

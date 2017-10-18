@@ -20,7 +20,7 @@ package com.company.baike.wiki_cn;
 public class Crawler {
 
 	public static void main(String[] args) throws Exception {
-		String domain = "软件工程";   // 测试课程  计算机科学史  农业史   汇编语言   计算机图形学    数据库   数据挖掘   Java
+		String domain = "农业史";   // 测试课程  计算机科学史  农业史   汇编语言   计算机图形学    数据库   数据挖掘   Java
 		constructKGByDomainName(domain);
 	}
 	
@@ -28,10 +28,10 @@ public class Crawler {
 	 * 爬取一门课程
 	 */
 	public static void constructKGByDomainName(String domainName) throws Exception {
-		CrawlerDomainTopic.storeDomain(domainName);
+//		CrawlerDomainTopic.storeDomain(domainName);
 		CrawlerDomainTopic.layerExtract(domainName);
 		CrawlerDomainTopic.topicExtract(domainName);
-		CrawlerContent.storeKGByDomainName(domainName);
+//		CrawlerContent.storeKGByDomainName(domainName);
 	}
 
 }
