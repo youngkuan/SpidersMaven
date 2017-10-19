@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.company.baike.wiki_cn.domain.LayerRelation;
 import org.jsoup.nodes.Document;
 
 import com.company.utils.JsoupDao;
@@ -156,7 +157,7 @@ public class CrawlerDomainTopicDAO {
 		topicList.add(topicThirdFinal);
 		return topicList;
 	}
-	
+
 	/**
 	 * 将List转为为无重复Term的Set
 	 * @param topicList
@@ -178,7 +179,45 @@ public class CrawlerDomainTopicDAO {
 		}
 		return topicSet;
 	}
-	
-	
-	
+
+	/**
+	 * 删除重复的元素
+	 * @param layerRelationList
+	 * @return
+	 */
+	public static List<LayerRelation> removeDuplicateLayerRelation(List<LayerRelation> layerRelationList){
+		for (int i = 0; i < layerRelationList.size() - 1; i++) {
+			LayerRelation layerRelation = layerRelationList.get(i);
+			for (int j = i + 1; j < layerRelationList.size(); j++) {
+				LayerRelation layerRelation1 = layerRelationList.get(j);
+				if (layerRelation.equals(layerRelation1)) {
+					layerRelationList.remove(layerRelation1);
+				}
+			}
+		}
+		return layerRelationList;
+	}
+
+//	/**
+//	 * 去除list中的重复元素
+//	 * @param list 需要处理的list
+//	 * @return 无重复元素的list集合
+//	 */
+//	public static List<Term> removeDuplicate(List<Term> list) {
+//		List<Term> result = new ArrayList<Term>();
+//		LinkedHashSet<String> nameSet = new LinkedHashSet<String>();
+//		LinkedHashSet<String> urlSet = new LinkedHashSet<String>();
+//		for (int i = 0; i < list.size(); i++) {
+//			Term term = list.get(i);
+//			nameSet.add(term.getTermName());
+//			urlSet.add(term.getTermUrl());
+//		}
+//		List<String> nameList = new ArrayList<String>(nameSet);
+//		List<String> urlList = new ArrayList<String>(urlSet);
+//		for (int i = 0; i < nameList.size(); i++) {
+//			result.add(new Term(nameList.get(i), urlList.get(i)));
+//		}
+//		return result;
+//	}
+
 }
