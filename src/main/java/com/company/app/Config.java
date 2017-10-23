@@ -65,9 +65,11 @@ public class Config {
 	public static String ASSEMBLE_TEXT_TABLE = "assemble_text";
 	public static String ASSEMBLE_IMAGE_TABLE = "assemble_image";
 	public static String ASSEMBLE_FRAGMENT_TABLE = "assemble_fragment";
+	public static String DEPENDENCY = "dependency";
 
 	public static int CONTENTLENGTH = 200;
-	
+	public static int DEPENDENCEMAX = 300; // 主题认知关系数量
+
 	
 	/**
 	 * 知乎 爬虫参数  配置

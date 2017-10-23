@@ -110,7 +110,7 @@ public class CrawlerDomainTopic {
 		MysqlReadWriteDAO.storeLayerRelation(domain, 0, layerSecond, firstLayer, domain); // 第一层主题与领域名构成上下位关系
 		List<Term> topicSecondAll = new ArrayList<Term>(); // 保存所有第二层的领域术语
 		if(layerSecond.size() != 0){
-			for(int i = 0; i < layerSecond.size(); i++){
+			for(int i = 0; i < layerSecond.size(); i++) {
 				Term layer = layerSecond.get(i);
 				String url = layer.getTermUrl();
 				List<Term> topicSecond = CrawlerDomainTopicDAO.topic(url); // 得到第二层领域术语（不含子主题）
@@ -192,9 +192,10 @@ public class CrawlerDomainTopic {
 			int layer_ID = i + 1;
 			MysqlReadWriteDAO.storeDomainTopicFuzhu(topic, domain, layer_ID, 1);
 		}
-		// 从 domain_layer_relation 删除重复主题关系保存到 domain_layer_relation2
+		// 从 domain_layer_relation 删除重复主题关系保存到 domain_topic_relation
 		Set<LayerRelation> layerRelationSet = new LinkedHashSet<LayerRelation>(layerRelationList);
-		MysqlReadWriteDAO.storeDomainLayerRelation(layerRelationSet);
+//		MysqlReadWriteDAO.storeDomainLayerRelation(layerRelationSet); // 存储 domain_layer_relation2
+		MysqlReadWriteDAO.storeDomainTopicRelation(layerRelationSet); // 存储 domain_topic_relation
 	}
 
 }
