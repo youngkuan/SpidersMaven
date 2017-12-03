@@ -69,15 +69,15 @@ public class DownloaderDAO {
 		/**
 		 *  roll the page
 		 */
-		JavascriptExecutor JS = (JavascriptExecutor) driver;
-		try {
-			JS.executeScript("scrollTo(0, document.body.scrollHeight)");
-			Thread.sleep(500);
-		} catch (Exception e) {
-			Log.log("Error at loading the page ...");
-			e.printStackTrace();
-			driver.quit();
-		}
+//		JavascriptExecutor JS = (JavascriptExecutor) driver;
+//		try {
+//			JS.executeScript("scrollTo(0, document.body.scrollHeight)");
+//			Thread.sleep(500);
+//		} catch (Exception e) {
+//			Log.log("Error at loading the page ...");
+//			e.printStackTrace();
+//			driver.quit();
+//		}
 		
 		/**
 		 *  save page

@@ -7,7 +7,7 @@ import java.util.*;
 public class DeleteDatabase {
 
     public static void main(String[] args) {
-        String domainName = "人机互动";
+        String domainName = "软件工程";
         // 删除数据库中这门课程的数据
         List<String> tableList = new ArrayList<>();
         tableList.add(Config.DOMAIN_TABLE);

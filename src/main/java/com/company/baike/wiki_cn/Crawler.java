@@ -1,6 +1,10 @@
 package com.company.baike.wiki_cn;
 
-import java.util.ArrayList;
+import com.company.app.Config;
+import com.company.utils.Log;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -23,46 +27,11 @@ import java.util.List;
 public class Crawler {
 
 	public static void main(String[] args) throws Exception {
-//		1、操作系统
-//		2、计算机组成原理（没有）
-//		3、网络原理（没有）
-//		4、C语言
-//		5、Java
-//		6、数据挖掘
-//		7、数据库
-//		8、计算机图形学
-//		9、汇编语言（比较少）
-//		10、软件工程
-
-		// 测试课程  计算机科学史 最优化 农业史  软件工程   汇编语言   计算机图形学    数据库   数据挖掘   Java
-//		String domain = "计算机科学史";
-//		constructKGByDomainName(domain);
-
 		// 爬取多门课程
-		List<String> domainList = new ArrayList<String>();
-//		domainList.add("C语言");
-//		domainList.add("数学最佳化");
-//		domainList.add("神经网络");
-//		domainList.add("最优化");
-		domainList.add("人机互动");
-		domainList.add("信息论");
-		domainList.add("电脑安全");
-		domainList.add("计算语言学");
-		domainList.add("计算机科学基础理论");
-		domainList.add("计算机编程");
-		domainList.add("算法");
-		domainList.add("软件工程");
-		domainList.add("人工智能");
-
-//		domainList.add("Java");
-		domainList.add("数据挖掘");
-		domainList.add("数据库");
-		domainList.add("计算机图形学");
-		domainList.add("汇编语言");
-		domainList.add("软件工程");
-		domainList.add("C语言");
-
+		List<String> domainList = FileUtils.readLines(new File(Config.CLASS_FILE_PATH));
+		Log.log(domainList.size());
 		for (int i = 0; i < domainList.size(); i++) {
+			Log.log(domainList.get(i));
 			constructKGByDomainName(domainList.get(i));
 		}
 	}

@@ -319,7 +319,8 @@ public class CrawlerFragmentDAO {
 		 * 根据主题内容，调用算法得到主题认知关系
 		 */
 		RankText rankText = new RankText();
-		List<Dependency> dependencies = rankText.rankText(termList, ClassName, Config.DEPENDENCEMAX);
+//		List<Dependency> dependencies = rankText.rankText(termList, ClassName, Config.DEPENDENCEMAX); // 设置认知关系的数量为固定值
+		List<Dependency> dependencies = rankText.rankText(termList, ClassName, termList.size()); // 设置认知关系的数量为主题的数量
 		/**
 		 * 指定领域，存储主题间的认知关系
 		 */

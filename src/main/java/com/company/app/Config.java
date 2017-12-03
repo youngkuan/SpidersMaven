@@ -44,6 +44,13 @@ public class Config {
 	public static String TERM_TABLE = "datainput_term"; // term的表名
 	public static String SYSTEM_TABLE = "system_step_status";
 	public static int IMAGE_COUNT = 7; // 设置每个分面下的图片数量
+
+	/**
+	 * 知乎 爬虫参数  配置
+	 * @author 郑元浩
+	 */
+	public static String ZHIHU_PATH = "F:\\00-Yotta数据爬取---MOOC需求\\00-百度百科7门课程文本数据\\百度百科_数据结构";
+	public static String ZHIHU_FILE_PATH = "F:\\03-other\\07-知乎";
 	
 	/**
 	 * 中文维基  爬虫参数  配置
@@ -68,16 +75,8 @@ public class Config {
 	public static String DEPENDENCY = "dependency";
 
 	public static int CONTENTLENGTH = 200;
-	public static int DEPENDENCEMAX = 300; // 主题认知关系数量
+//	public static int DEPENDENCEMAX = 100; // 主题认知关系数量，固定值，没有使用
 
-	
-	/**
-	 * 知乎 爬虫参数  配置
-	 * @author 郑元浩
-	 */
-	public static String ZHIHU_PATH = "F:\\00-Yotta数据爬取---MOOC需求\\00-百度百科7门课程文本数据\\百度百科_数据结构";
-	public static String ZHIHU_FILE_PATH = "F:\\03-other\\07-知乎";
-	
-	
-	
+	public static String CLASS_FILE_PATH = "D:\\Workspace\\eclipse\\Yotta_db\\domains.txt";
+
 }

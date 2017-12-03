@@ -67,8 +67,8 @@ public class CosineSimilarAlgorithm {
 
             return denominator / Math.sqrt(sqdoc1 * sqdoc2);
         } else {
-            throw new NullPointerException(
-                    " the Document is null or have not cahrs!!");
+//            throw new NullPointerException(" the Document is null or have not cahrs!!");
+            return 0;
         }
     }
 
