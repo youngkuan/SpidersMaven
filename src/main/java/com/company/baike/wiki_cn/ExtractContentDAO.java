@@ -827,7 +827,7 @@ public class ExtractContentDAO {
 	 * @return
 	 */
 	public static LinkedList<Element> getNodes(Document doc){
-		Element mainContent = doc.select("div.mw-content-ltr").get(0);
+		Element mainContent = doc.select("div.mw-content-ltr").get(0).child(0);
 		Elements childs = mainContent.children();
 		LinkedList<Element> list = new LinkedList<Element>();
 		for (Element e : childs) {
