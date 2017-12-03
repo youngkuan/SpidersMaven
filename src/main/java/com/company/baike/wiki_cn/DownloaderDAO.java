@@ -16,6 +16,7 @@ import com.company.app.Config;
 import com.company.utils.Log;
 import com.company.utils.SaveHtml;
 
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.selector.Html;
 
@@ -36,10 +37,12 @@ public class DownloaderDAO {
 	 * @throws Exception
 	 */
 	public static String seleniumWikiCN(String url) throws Exception {
-		System.setProperty("webdriver.chrome.driver", Config.CHROME_PATH);
+//		System.setProperty("webdriver.chrome.driver", Config.CHROME_PATH);
+		System.setProperty("webdriver.ie.driver", Config.IE_PATH);
 //		System.setProperty("phantomjs.binary.path", Config.PHANTOMJS_PATH);
 		int randomTimeout = SaveHtml.random(1000, 2000);
-		WebDriver driver = new ChromeDriver();
+//		WebDriver driver = new ChromeDriver();
+		WebDriver driver = new InternetExplorerDriver();
 //		WebDriver driver = new PhantomJSDriver();
 		int m = 1;
 		driver.manage().timeouts().pageLoadTimeout(randomTimeout, TimeUnit.SECONDS);
@@ -47,12 +50,12 @@ public class DownloaderDAO {
 			try{
 				driver.get(url);
 //		        driver.manage().window().maximize();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.log("第" + m + "次重载页面...");
 				m++;
 				driver.quit();
-				driver = new ChromeDriver();
+//				driver = new ChromeDriver();
+				driver = new InternetExplorerDriver();
 //				driver = new PhantomJSDriver();
 				int randomTimeout2 = SaveHtml.random(1000, 2000);
 				driver.manage().timeouts().pageLoadTimeout(randomTimeout2, TimeUnit.SECONDS);
@@ -66,15 +69,15 @@ public class DownloaderDAO {
 		/**
 		 *  roll the page
 		 */
-		JavascriptExecutor JS = (JavascriptExecutor) driver;
-		try {
-			JS.executeScript("scrollTo(0, document.body.scrollHeight)");
-			Thread.sleep(500);
-		} catch (Exception e) {
-			Log.log("Error at loading the page ...");
-			e.printStackTrace();
-			driver.quit();
-		}
+//		JavascriptExecutor JS = (JavascriptExecutor) driver;
+//		try {
+//			JS.executeScript("scrollTo(0, document.body.scrollHeight)");
+//			Thread.sleep(500);
+//		} catch (Exception e) {
+//			Log.log("Error at loading the page ...");
+//			e.printStackTrace();
+//			driver.quit();
+//		}
 		
 		/**
 		 *  save page

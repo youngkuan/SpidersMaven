@@ -38,7 +38,7 @@ public class CrawlerContentDAO {
 		/**
 		 * 设置解析参数
 		 */
-		String topicUrl = "https://zh.wikipedia.org/wiki/%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5";
+		String topicUrl = "https://zh.wikipedia.org/wiki/User_talk:Liangent-test/CXTest";
 //		String topicUrl = "https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93";
 //		String topicUrl = "https://zh.wikipedia.org/wiki/%E9%93%BE%E8%A1%A8";
 //		String topicUrl = "https://zh.wikipedia.org/wiki/%E8%B7%B3%E8%B7%83%E5%88%97%E8%A1%A8";
@@ -142,7 +142,7 @@ public class CrawlerContentDAO {
 	/**
 	 * 得到一个主题的所有分面及其分面级数
 	 * 1. 数据结构为: FacetSimple
-	 * @param htmlpath
+	 * @param doc
 	 * @return 
 	 */
 	public static List<FacetSimple> getAllFacet(Document doc){
@@ -235,7 +235,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> firstTitle = ExtractContentDAO.getFirstTitle(doc);
 				if(firstTitle.size() != 0){
 					List<Assemble> firstContent = ExtractContentDAO.getFirstContent(doc); // 一级分面内容
-					assembleList.addAll(firstContent);
+					if (firstContent != null) {
+						assembleList.addAll(firstContent);
+					}
 				}
 			}
 			/**
@@ -245,7 +247,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> secondTitle = ExtractContentDAO.getSecondTitle(doc);
 				if(secondTitle.size() != 0){
 					List<Assemble> secondContent = ExtractContentDAO.getSecondContent(doc); // 二级分面内容
-					assembleList.addAll(secondContent);
+					if (secondContent != null) {
+						assembleList.addAll(secondContent);
+					}
 				}
 			}
 			/**
@@ -255,7 +259,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> thirdTitle = ExtractContentDAO.getThirdTitle(doc);
 				if(thirdTitle.size() != 0){
 					List<Assemble> thirdContent = ExtractContentDAO.getThirdContent(doc); // 三级分面内容
-					assembleList.addAll(thirdContent);
+					if (thirdContent != null) {
+						assembleList.addAll(thirdContent);
+					}
 				}
 			}
 		}
@@ -275,7 +281,7 @@ public class CrawlerContentDAO {
 	 * @param flagThird
 	 * @return
 	 */
-	public static List<Assemble> getAllContentNew(String domain, String topic, Document doc, 
+	public static List<Assemble> getAllContentNew(String domain, String topic, Document doc,
 			boolean flagFirst, boolean flagSecond, boolean flagThird){
 		List<Assemble> assembleResultList = new ArrayList<Assemble>();
 		List<Assemble> assembleList = getAllContent(doc, flagFirst, flagSecond, flagThird);
@@ -353,7 +359,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> firstTitle = ExtractContentDAO.getFirstTitle(doc);
 				if(firstTitle.size() != 0){
 					List<AssembleImage> firstContent = ExtractContentDAO.getFirstImage(doc); // 一级分面图片
-					assembleImageList.addAll(firstContent);
+					if (firstContent != null) {
+						assembleImageList.addAll(firstContent);
+					}
 				}
 			}
 			
@@ -364,7 +372,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> secondTitle = ExtractContentDAO.getSecondTitle(doc);
 				if(secondTitle.size() != 0){
 					List<AssembleImage> secondContent = ExtractContentDAO.getSecondImage(doc); // 二级分面图片
-					assembleImageList.addAll(secondContent);
+					if (secondContent != null) {
+						assembleImageList.addAll(secondContent);
+					}
 				}
 			}
 			
@@ -375,7 +385,9 @@ public class CrawlerContentDAO {
 				LinkedList<String> thirdTitle = ExtractContentDAO.getThirdTitle(doc);
 				if(thirdTitle.size() != 0){
 					List<AssembleImage> thirdContent = ExtractContentDAO.getThirdImage(doc); // 三级分面图片
-					assembleImageList.addAll(thirdContent);
+					if (thirdContent != null) {
+						assembleImageList.addAll(thirdContent);
+					}
 				}
 			}
 			

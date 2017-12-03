@@ -1,8 +1,13 @@
 package com.company.baike.wiki_cn;
 
+import com.company.app.Config;
 import com.company.utils.Log;
+import org.apache.commons.io.FileUtils;
 
-/**  
+import java.io.File;
+import java.util.List;
+
+/**
  * 中文维基爬虫
  * 1. 爬取领域术语
  * 	1.1  读取domain表格获取所有领域名
@@ -22,28 +27,25 @@ import com.company.utils.Log;
 public class Crawler {
 
 	public static void main(String[] args) throws Exception {
-		cralwerAll();
-	}
-	
-	/**
-	 * 爬取所有课程
-	 * @throws Exception
-	 */
-	public static void cralwerAll() throws Exception{
-		Log.log("------------------------------------------begin topic crawler------------------------------------------");
-		CrawlerDomainTopic.store();
-		Log.log("------------------------------------------begin text crawler------------------------------------------");
-		CrawlerContent.store();
+		// 爬取多门课程
+		List<String> domainList = FileUtils.readLines(new File(Config.CLASS_FILE_PATH));
+		Log.log(domainList.size());
+		for (int i = 0; i < domainList.size(); i++) {
+			Log.log(domainList.get(i));
+			constructKGByDomainName(domainList.get(i));
+		}
 	}
 	
 	/**
 	 * 爬取一门课程
 	 */
-	public static void crawler() throws Exception{
-		String domain = "植物生理学";
-		CrawlerDomainTopic.layerExtract(domain);
-		CrawlerDomainTopic.topicExtract(domain);
-		CrawlerContent.pipeline(domain);
+	public static void constructKGByDomainName(String domainName) throws Exception {
+		// 存储主题
+		CrawlerDomainTopic.storeDomain(domainName);
+		CrawlerDomainTopic.layerExtract(domainName);
+		CrawlerDomainTopic.topicExtract(domainName);
+		// 存储分面和碎片
+		CrawlerContent.storeKGByDomainName(domainName);
 	}
 
 }

@@ -9,11 +9,11 @@ package com.company.utils;
  * 
  */
 
-import java.io.File;
-import java.io.IOException;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.io.File;
+import java.io.IOException;
 
 public class JsoupDao {
 
