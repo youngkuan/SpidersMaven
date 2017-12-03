@@ -10,13 +10,25 @@ import com.spreada.utils.chinese.ZHConverter;
  */
 
 public class Config {
-	
+
+	/**
+	 * 表名
+	* */
+	//主题表
+	public static String topicTable = "domain_topic";
+	//分面表
+	public static String facetTable = "facet";
+	//碎片表
+	public static String fragmentTable = "assemble_fragment";
+	//课程名
+	public static String course = "数据结构";
+
 	/**
 	 * Selenium Webdriver 配置
 	 */
 	public static String PHANTOMJS_PATH = "D:\\phantomjs.exe";  // 无界面浏览器
 	public static String IE_PATH = "D:\\IEDriverServer.exe";  // IE模拟
-	public static String CHROME_PATH = "D:\\chromedriver.exe";  // Chrome模拟
+	public static String CHROME_PATH = "E:/workspace/java_workspace/chromedriver.exe"; // Chrome模拟
 	
 	/**
 	 * Mysql 配置
@@ -78,5 +90,6 @@ public class Config {
 //	public static int DEPENDENCEMAX = 100; // 主题认知关系数量，固定值，没有使用
 
 	public static String CLASS_FILE_PATH = "D:\\Workspace\\eclipse\\Yotta_db\\domains.txt";
+
 
 }
