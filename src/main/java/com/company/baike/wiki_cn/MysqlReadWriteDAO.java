@@ -359,6 +359,33 @@ public class MysqlReadWriteDAO {
 	}
 
 	/**
+	 * 存储domain_topic_relation
+	 * @param termList
+	 * @param domain
+	 * @param layer
+	 */
+	public static void storeDomainTopicRelation(Set<LayerRelation> layerRelationSet){
+		mysqlUtils mysql = new mysqlUtils();
+		String sql = "insert into " + Config.DOMAIN_TOPIC_RELATION_TABLE + " (Parent, Child, ClassName)"
+				+ " VALUES(?, ?, ?);";
+		for (LayerRelation layerRelation : layerRelationSet) {
+			List<Object> params = new ArrayList<Object>();
+			if (layerRelation.getChildName().equals(layerRelation.getDomain())) {
+				continue;
+			}
+			params.add(layerRelation.getParentName());
+			params.add(layerRelation.getChildName());
+			params.add(layerRelation.getDomain());
+			try {
+				mysql.addDeleteModify(sql, params);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		mysql.closeconnection();
+	}
+
+	/**
 	 * 存储domain_topic，存储第n层领域术语到数据库 domain_topic 表格（Set）
 	 * @param termList
 	 * @param domain
@@ -441,15 +468,17 @@ public class MysqlReadWriteDAO {
 				+ " VALUES(?, ?, ?, ?, ?);";
 		for (Term childTopic : childTopicList) {
 			List<Object> params = new ArrayList<Object>();
-			params.add(parentTopicName);
-			params.add(parentTopicLayer);
-			params.add(childTopic.getTermName());
-			params.add(childLayerLayer);
-			params.add(domain);
-			try {
-				mysql.addDeleteModify(sql, params);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (!childTopic.getTermName().equals(domain)) {
+				params.add(parentTopicName);
+				params.add(parentTopicLayer);
+				params.add(childTopic.getTermName());
+				params.add(childLayerLayer);
+				params.add(domain);
+				try {
+					mysql.addDeleteModify(sql, params);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		mysql.closeconnection();

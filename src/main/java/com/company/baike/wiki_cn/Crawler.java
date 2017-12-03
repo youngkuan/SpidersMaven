@@ -1,5 +1,12 @@
 package com.company.baike.wiki_cn;
 
+import com.company.app.Config;
+import com.company.utils.Log;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.util.List;
+
 /**
  * 中文维基爬虫
  * 1. 爬取领域术语
@@ -20,18 +27,25 @@ package com.company.baike.wiki_cn;
 public class Crawler {
 
 	public static void main(String[] args) throws Exception {
-		String domain = "农业史";   // 测试课程  计算机科学史  农业史   汇编语言   计算机图形学    数据库   数据挖掘   Java
-		constructKGByDomainName(domain);
+		// 爬取多门课程
+		List<String> domainList = FileUtils.readLines(new File(Config.CLASS_FILE_PATH));
+		Log.log(domainList.size());
+		for (int i = 0; i < domainList.size(); i++) {
+			Log.log(domainList.get(i));
+			constructKGByDomainName(domainList.get(i));
+		}
 	}
 	
 	/**
 	 * 爬取一门课程
 	 */
 	public static void constructKGByDomainName(String domainName) throws Exception {
-//		CrawlerDomainTopic.storeDomain(domainName);
+		// 存储主题
+		CrawlerDomainTopic.storeDomain(domainName);
 		CrawlerDomainTopic.layerExtract(domainName);
 		CrawlerDomainTopic.topicExtract(domainName);
-//		CrawlerContent.storeKGByDomainName(domainName);
+		// 存储分面和碎片
+		CrawlerContent.storeKGByDomainName(domainName);
 	}
 
 }

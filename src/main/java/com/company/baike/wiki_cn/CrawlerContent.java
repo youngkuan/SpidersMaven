@@ -143,6 +143,11 @@ public class CrawlerContent {
 						+ " ---> is already existing in facet, spider_text, assemble_text, spider_image, assemble_image, assemble_fragment...");
 			}
 		}
+
+		/**
+		 * 保存主题间的上下位关系
+		 */
+		CrawlerFragmentDAO.generateDependenceByClassName(domain);
 	}
 
 

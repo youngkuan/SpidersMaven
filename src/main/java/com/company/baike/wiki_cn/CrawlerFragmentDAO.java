@@ -1,12 +1,12 @@
 package com.company.baike.wiki_cn;
 
 import com.company.app.Config;
-import com.company.baike.wiki_cn.domain.Assemble;
-import com.company.baike.wiki_cn.domain.AssembleImage;
-import com.company.baike.wiki_cn.domain.FacetRelation;
-import com.company.baike.wiki_cn.domain.FacetSimple;
+import com.company.baike.wiki_cn.domain.*;
+import com.company.baike.wiki_cn.ranktext.RankText;
+import com.company.baike.wiki_cn.ranktext.Term;
 import com.company.utils.JsoupDao;
 import com.company.utils.Log;
+import com.company.utils.mysqlUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 实现中文维基百科知识森林数据集的构建
@@ -259,6 +260,91 @@ public class CrawlerFragmentDAO {
 			exist = true;
 		}
 		return exist;
+	}
+
+	/**
+	 * 根据领域名生成认知关系
+	 * @param ClassName 领域名
+	 * @return 是否产生成功
+	 */
+	public static boolean generateDependenceByClassName(String ClassName) {
+
+		List<Term> termList = new ArrayList<Term>();
+		/**
+		 * 根据指定领域，查询主题表，获得领域下所有主题
+		 */
+		mysqlUtils mysql = new mysqlUtils();
+		String sql = "select * from " + Config.DOMAIN_TOPIC_TABLE +" where ClassName=?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(ClassName);
+		try {
+			List<Map<String, Object>> results = mysql.returnMultipleResult(sql, params);
+			for (int i = 0; i < results.size(); i++) {
+				Term term = new Term();
+				term.setTermID(Integer.parseInt(results.get(i).get("TermID").toString()));
+				term.setTermName(results.get(i).get("TermName").toString());
+				termList.add(term);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mysql.closeconnection();
+		}
+		/**
+		 * 根据指定领域及主题，查询碎片表，获得主题的内容信息
+		 */
+		mysqlUtils mysqlAssemble = new mysqlUtils();
+		String sqlAssemble = "select * from " + Config.ASSEMBLE_FRAGMENT_TABLE +" where TermID=? and TermName=? and ClassName=?";
+		try {
+			for (int i = 0; i < termList.size(); i++) {
+				Term term = termList.get(i);
+				List<Object> paramsAssemble = new ArrayList<Object>();
+				paramsAssemble.add(term.getTermID());
+				paramsAssemble.add(term.getTermName());
+				paramsAssemble.add(ClassName);
+				List<Map<String, Object>> results = mysqlAssemble.returnMultipleResult(sqlAssemble, paramsAssemble);
+				StringBuffer termText = new StringBuffer();
+				for (int j = 0; j < results.size(); j++) {
+					termText.append(results.get(j).get("FragmentContent").toString());
+				}
+				term.setTermText(termText.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mysqlAssemble.closeconnection();
+		}
+
+		/**
+		 * 根据主题内容，调用算法得到主题认知关系
+		 */
+		RankText rankText = new RankText();
+//		List<Dependency> dependencies = rankText.rankText(termList, ClassName, Config.DEPENDENCEMAX); // 设置认知关系的数量为固定值
+		List<Dependency> dependencies = rankText.rankText(termList, ClassName, termList.size()); // 设置认知关系的数量为主题的数量
+		/**
+		 * 指定领域，存储主题间的认知关系
+		 */
+		boolean success = false;
+		mysqlUtils mysqlDependency = new mysqlUtils();
+		String sqlDependency = "insert into " + Config.DEPENDENCY + "(ClassName,Start,StartID,End,EndID,Confidence) values(?,?,?,?,?,?);";
+		try {
+			for (int i = 0; i < dependencies.size(); i++) {
+				Dependency dependency = dependencies.get(i);
+				List<Object> paramsDependency = new ArrayList<Object>();
+				paramsDependency.add(ClassName);
+				paramsDependency.add(dependency.getStart());
+				paramsDependency.add(dependency.getStartID());
+				paramsDependency.add(dependency.getEnd());
+				paramsDependency.add(dependency.getEndID());
+				paramsDependency.add(dependency.getConfidence());
+				success = mysqlDependency.addDeleteModify(sqlDependency, paramsDependency);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mysqlDependency.closeconnection();
+		}
+		return success;
 	}
 	
 }
