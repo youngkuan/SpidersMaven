@@ -28,11 +28,11 @@ public class QuoraProcessor implements PageProcessor{
         //提交数据
         page.putField("fragment",fragments);
     }
-    public void quoraAnswerCrawl(){
+    public void quoraAnswerCrawl(String courseName){
 
         //1.获取分面名
         ProcessorSQL processorSQL = new ProcessorSQL();
-        List<Map<String, Object>> allFacetsInformation = processorSQL.getAllFacets(Config.facetTable);
+        List<Map<String, Object>> allFacetsInformation = processorSQL.getAllFacets(Config.facetTable,courseName);
         //2.添加连接请求
         List<Request> requests = new ArrayList<Request>();
         for(Map<String, Object> facetInformation:allFacetsInformation){

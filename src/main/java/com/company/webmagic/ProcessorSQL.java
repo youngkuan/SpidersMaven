@@ -32,6 +32,33 @@ public class ProcessorSQL {
         }
         return exist;
     }
+    /**
+    *获取表格中的所有课程
+     * 使用表格:domain
+     * @param table 表格名
+     * @return 课程列表
+    */
+    public List<String> getCourses(String table){
+        List<String> courses = new ArrayList<>();
+        mysqlUtils mysql = new mysqlUtils();
+        String sql = "select ClassName from "+ table;
+        List<Object> params = new ArrayList<Object>();
+        try {
+            List<Map<String, Object>> results = mysql.returnMultipleResult(sql,params);
+            for(Map<String,Object> m:results){
+                courses.add((String) m.get("ClassName"));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            mysql.closeconnection();
+        }
+        return courses;
+    }
+
+
+
     /**判断：某个分面是否已经存在数据库
      *适用表格：facet
      * @param table 表名
@@ -64,11 +91,12 @@ public class ProcessorSQL {
      * @param facetTable 分面表
      * @return allFacetsInformation 所有的分面
      * */
-    public List<Map<String, Object>> getAllFacets(String facetTable){
+    public List<Map<String, Object>> getAllFacets(String facetTable,String courseName){
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         mysqlUtils mysql = new mysqlUtils();
-        String sql = "select * from "+  facetTable;
+        String sql = "select * from "+  facetTable +" where ClassName=?";
         List<Object> params = new ArrayList<Object>();
+        params.add(courseName);
         try {
             results = mysql.returnMultipleResult(sql, params);
         } catch (Exception e) {

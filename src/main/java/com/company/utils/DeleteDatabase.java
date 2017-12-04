@@ -9,7 +9,7 @@ public class DeleteDatabase {
     public static void main(String[] args) {
         String domainName = "软件工程";
         // 删除数据库中这门课程的数据
-        List<String> tableList = new ArrayList<>();
+        List<String> tableList = new ArrayList<String>();
         tableList.add(Config.DOMAIN_TABLE);
         tableList.add(Config.DOMAIN_LAYER_TABLE);
         tableList.add(Config.DOMAIN_LAYER_FUZHU_TABLE);

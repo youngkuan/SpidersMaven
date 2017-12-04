@@ -21,11 +21,11 @@ public class RankText {
      * @return 主题间的认知关系
      */
     public List<Dependency> rankText(List<Term> termList, String ClassName, int MAX) {
-        List<Dependency> dependencies = new ArrayList<>();
+        List<Dependency> dependencies = new ArrayList<Dependency>();
 
         logger.info("Finish Hash...");
         logger.info("Start computing the hammingDistance...");
-        HashMap<TwoTuple<Term, Term>, Double> disMap = new HashMap<>(16);
+        HashMap<TwoTuple<Term, Term>, Double> disMap = new HashMap<TwoTuple<Term, Term>, Double>(16);
         for (int i = 0; i < termList.size() - 1; i++) {
             for (int j = i + 1; j < termList.size(); j++) {
                 Term term1 = termList.get(i);
